@@ -1,21 +1,16 @@
 package remote
 
 import (
-	"fmt"
-	"os/exec"
 	"net/http"
+	"os/exec"
 
 	"github.com/docker/cli/cli/connhelper"
 	"github.com/docker/docker/client"
 )
 
-func Exec(host string, cmd string) {
+func Exec(host string, cmd string) ([]byte, error) {
 	osCmd := exec.Command("ssh", host, cmd)
-	output, err := osCmd.Output()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(string(output))
+	return osCmd.CombinedOutput()
 }
 
 func (dockerSSHClient DockerSSHClient) Client() *client.Client {

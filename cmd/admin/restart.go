@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
@@ -33,9 +32,9 @@ var restartCmd = &cobra.Command{
     for _, target := range targets {
       err := docker.ContainerRestart(ctx, target, container.StopOptions{})
       if err != nil {
-        fmt.Printf("Error restarting %s: %s\n", target, err)
+        cmd.PrintErrf("Error restarting %s: %s\n", target, err)
       } else {
-        fmt.Printf("Restarted %s\n", target)
+        cmd.Printf("Restarted %s\n", target)
       }
     }
 	},

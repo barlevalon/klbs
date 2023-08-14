@@ -11,7 +11,11 @@ var dfCmd = &cobra.Command{
 	Short: "",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-    remote.Exec(viper.GetString("host"), "df -h /")
+    output, err := remote.Exec(viper.GetString("host"), "df -h /")
+    if err != nil {
+      cmd.PrintErrf("Error running df: %s\n", err)
+    }
+    cmd.Printf("%s", output)
 	},
 }
 
