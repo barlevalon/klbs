@@ -7,7 +7,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-  "github.com/barlevalon/klbs/cmd/admin"
+	"github.com/barlevalon/klbs/cmd/admin"
+	"github.com/barlevalon/klbs/cmd/plex"
 )
 
 var cfgFile string
@@ -32,6 +33,7 @@ func init() {
   rootCmd.PersistentFlags().StringP("host", "H", viper.GetString("host"), "Host to connect to")
 
   rootCmd.AddCommand(admin.AdminCmd)
+  rootCmd.AddCommand(plex.PlexCmd)
 }
 
 func initConfig() {

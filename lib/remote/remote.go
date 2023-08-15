@@ -9,8 +9,7 @@ import (
 )
 
 func Exec(host string, cmd string) ([]byte, error) {
-	osCmd := exec.Command("ssh", host, cmd)
-	return osCmd.CombinedOutput()
+	return exec.Command("ssh", host, cmd).CombinedOutput()
 }
 
 func (dockerSSHClient DockerSSHClient) Client() *client.Client {
