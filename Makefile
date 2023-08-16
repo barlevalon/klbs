@@ -6,4 +6,5 @@ install:
 	cp ./bin/klbs ~/.local/bin/klbs
 
 clean:
+	rm -rf ./dist
 	rm -rf ./bin
