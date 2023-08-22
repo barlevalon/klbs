@@ -3,7 +3,7 @@ package plex
 import (
 	"fmt"
 
-	"github.com/barlevalon/klbs/lib/tautulli"
+	"github.com/barlevalon/klbs/pkg/tautulli"
 	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

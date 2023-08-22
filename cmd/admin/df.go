@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/barlevalon/klbs/lib/remote"
+	"github.com/barlevalon/klbs/pkg/remote"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-  "github.com/barlevalon/klbs/lib/remote"
+  "github.com/barlevalon/klbs/pkg/remote"
 )
 
 var restartCmd = &cobra.Command{
