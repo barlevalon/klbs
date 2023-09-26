@@ -14,14 +14,14 @@ import (
 var restartCmd = &cobra.Command{
 	Use:   "restart",
 	Short: "Restarts main services in correct order",
-	Long: `Restarts rclone-mount, plex, nzbget, rtorrent-flood, sonarr, radarr. In order.`,
+	Long: `Restarts rclone-mount, jellyfin, plex, nzbget, rtorrent-flood, sonarr, radarr. In order.`,
   Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
     docker := remote.DockerSSHClient{Host: viper.GetString("host")}.Client()
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    allTargets := []string{"rclone-mount", "plex", "nzbget", "rtorrent-flood", "sonarr", "radarr"}
+    allTargets := []string{"rclone-mount", "jellyfin", "plex", "nzbget", "rtorrent-flood", "sonarr", "radarr"}
     targets := []string{}
     if len(args) == 1 && args[0] == "all" {
       targets = append(targets, allTargets...)
