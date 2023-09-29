@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/barlevalon/klbs/pkg/jellyfin"
 	"github.com/barlevalon/klbs/pkg/tautulli"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -15,19 +16,24 @@ var updateCmd = &cobra.Command{
 	Short: "Update components",
 	Long:  ``,
 	Args:  validateArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		activity, err := tautulli.GetActivity()
+	RunE: func(cmd *cobra.Command, args []string) error {
+		plexActivity, err := tautulli.GetActivity()
 		if err != nil {
 			cmd.PrintErrf("Error getting activity: %s\n", err)
 		}
-		if activity.Response.Data.StreamCount != "0" {
+    sessions, jerr := jellyfin.GetSessions()
+    if jerr != nil {
+      return jerr
+    }
+
+		if len(sessions) != 0 || plexActivity.Response.Data.StreamCount != "0" {
 			prompt := promptui.Prompt{
-				Label:     "There are active streams. Are you sure you want to update?",
+				Label:     "There are active sessions. Are you sure you want to update?",
 				IsConfirm: true,
 			}
 			result, _ := prompt.Run()
 			if result != "y" {
-				return
+				return nil
 			}
 		}
 		cmd.Printf("Updating...")
@@ -37,6 +43,7 @@ var updateCmd = &cobra.Command{
     // Run watchtower update for each image
     // If reboot required, set restart required, prompt to reboot
     // If restart required, restart
+    return nil
 	},
 }
 

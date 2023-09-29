@@ -1,4 +1,4 @@
-package plex
+package sessions
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 
-var sessionsCmd = &cobra.Command{
+var SessionsCmd = &cobra.Command{
 	Use:   "sessions",
 	Short: "List active sessions",
 	Long:  ``,
@@ -22,7 +22,7 @@ var sessionsCmd = &cobra.Command{
     }
     getActivityResponse, err := tautulli.GetActivity()
     if err != nil {
-      return fmt.Errorf("Failed getting activity: %v\n", err)
+      return fmt.Errorf("failed getting activity: %v", err)
     }
 		cmd.Printf("Plex streams: %s\n", getActivityResponse.Response.Data.StreamCount)
 		for _, session := range getActivityResponse.Response.Data.Sessions {
@@ -40,5 +40,4 @@ var sessionsCmd = &cobra.Command{
 }
 
 func init() {
-	PlexCmd.AddCommand(sessionsCmd)
 }

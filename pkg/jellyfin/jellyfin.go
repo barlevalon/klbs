@@ -12,23 +12,33 @@ import (
 
 //go:generate oapi-codegen --package=jellyfin -generate=client,types -o ./jellyfin.gen.go https://jellyfin.kielbasa.link/api-docs/openapi.json
 
-func Jellyfin(cmd *cobra.Command, args []string) error {
-  tokenString := fmt.Sprintf("MediaBrowser Token=\"%s\"", viper.GetString("jellyfin_api_key"))
+func GetSessions() ([]SessionInfo, error) {
+	tokenString := fmt.Sprintf("MediaBrowser Token=\"%s\"", viper.GetString("jellyfin_api_key"))
 	apiKey, err := securityprovider.NewSecurityProviderApiKey("header", "Authorization", tokenString)
+  if err != nil {
+    return nil, err
+  }
 	c, err := NewClientWithResponses(viper.GetString("jellyfin_url"), WithRequestEditorFn(apiKey.Intercept))
 	if err != nil {
-    return err
+		return nil, err
 	}
 	params := GetSessionsParams{}
 	resp, err := c.GetSessionsWithResponse(context.Background(), &params)
 	if err != nil {
-    return err
+		return nil, err
 	}
-  if resp.StatusCode() != 200 {
-    err := fmt.Errorf("Failed getting Jellyfin sessions: %s\n", resp.Status())
+	if resp.StatusCode() != 200 {
+		err := fmt.Errorf("failed getting Jellyfin sessions: %s", resp.Status())
+		return nil, err
+	}
+  return *resp.JSON200, nil
+}
+
+func Jellyfin(cmd *cobra.Command, args []string) error {
+	sessions, err := GetSessions()
+  if err != nil {
     return err
   }
-	sessions := *resp.JSON200
 	for _, session := range sessions {
 		if session.NowPlayingItem != nil {
 			item := *session.NowPlayingItem
@@ -39,10 +49,10 @@ func Jellyfin(cmd *cobra.Command, args []string) error {
 			} else {
 				status = "playing"
 			}
-      progress := float64(*session.PlayState.PositionTicks) / float64(*item.RunTimeTicks) * 100
+			progress := float64(*session.PlayState.PositionTicks) / float64(*item.RunTimeTicks) * 100
 			cmd.Printf("[%v] [%v] [Status: %v (%0.0f%%)]\n", *session.UserName, file, status, progress)
 		}
 	}
 
-  return nil
+	return nil
 }
