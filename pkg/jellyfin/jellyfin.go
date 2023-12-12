@@ -34,7 +34,7 @@ func GetSessions() ([]SessionInfo, error) {
   return *resp.JSON200, nil
 }
 
-func Jellyfin(cmd *cobra.Command, args []string) error {
+func PrintJellyfinSessions(cmd *cobra.Command, args []string) error {
 	sessions, err := GetSessions()
   if err != nil {
     return err
